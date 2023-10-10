@@ -1,14 +1,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace project1
 {
     public partial class Form1 : Form
     {
-        private string folderPath = @"C:\Users\Frankie\Desktop\Fall 2023\COP4365\Stock Data";
         private string timePeriod = "Day";
-        SplitContainer splitContainer1 = new SplitContainer();
         DataGridView dataGridView1 = new DataGridView();
 
         public Form1()
@@ -21,7 +19,7 @@ namespace project1
         private void loadTickers()
         {
             // Get all .csv files from the Stock Data Folder
-            string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
+            string[] csvFiles = Directory.GetFiles(getFolderPath(), "*.csv");
 
             // To store unique ticker names
             HashSet<string> uniqueTickers = new HashSet<string>();
@@ -58,6 +56,8 @@ namespace project1
         {
             button3.Visible = status;
             dataGridView1.Visible = status;
+            chart1.Visible = status;
+            chart2.Visible = status;
         }
 
         // Change this part into setters/getters
@@ -77,6 +77,19 @@ namespace project1
             }
         }
 
+        // Function to get the relative path of the Stock Data folder
+        private string getFolderPath()
+        {
+            string currentDirectory = Directory.GetCurrentDirectory();
+            string parentDirectory = Directory.GetParent(currentDirectory).FullName;
+            string parentDirectory1 = Directory.GetParent(parentDirectory).FullName;
+            string parentDirectory2 = Directory.GetParent(parentDirectory1).FullName;
+            string parentDirectory3 = Directory.GetParent(parentDirectory2).FullName;
+            string parentDirectory4 = Directory.GetParent(parentDirectory3).FullName;
+            string stockDataPath = Path.Combine(parentDirectory4, "Stock Data");
+            return stockDataPath;
+        }
+
         // Function to view ticker information when button is clicked  
         private void button1_Click(object sender, EventArgs e)
         {
@@ -89,19 +102,8 @@ namespace project1
 
             // Look for file matching ticker symbol and date period and open it
             string fileName = comboBox1.SelectedItem.ToString() + "-" + timePeriod + ".csv";
-            string filePath = Path.Combine(folderPath, fileName);
-
-            // Using relative path instead of absolute
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string parentDirectory = Directory.GetParent(currentDirectory).FullName;
-            string parentDirectory1 = Directory.GetParent(parentDirectory).FullName;
-            string parentDirectory2 = Directory.GetParent(parentDirectory1).FullName;
-            string parentDirectory3 = Directory.GetParent(parentDirectory2).FullName;
-            string parentDirectory4 = Directory.GetParent(parentDirectory3).FullName;
-            string stockDataPath = Path.Combine(parentDirectory4, "Stock Data");
-            string filePath1 = Path.Combine(stockDataPath, fileName);
-            Debug.Write("filePath1: " + filePath1);
-            Debug.WriteLine("");
+            string stockDataPath = getFolderPath();
+            string filePath = Path.Combine(stockDataPath, fileName);
 
             // Check if the file exists
             if (!File.Exists(filePath))
@@ -124,7 +126,6 @@ namespace project1
             // Add the DataGridView to the form
             this.Controls.Add(dataGridView1);
 
-            // Also add a reset button to go back once there is stock data
         }
 
         // Function to use and open a CSV file for stock data
@@ -161,19 +162,85 @@ namespace project1
             return candlesticks;
         }
 
-        private void displayData(BindingList<candlestick> candlesticks) 
+        private void displayData(BindingList<candlestick> candlesticks)
         {
-            //splitContainer1.Dock = DockStyle.Fill; // Dock the split container to fill the form
-            //this.Controls.Add(splitContainer1); // Add the split container to the form
-
-            // why the fuck is the fucking piece of shit fucking stupid fucking software so fucking shit fuck this fuck you visual studio fuck off
-            //Chart chart1 = new Chart();
-            //chart1.Dock = DockStyle.Fill; // Dock the chart to fill the left panel
-            //splitContainer1.Panel1.Controls.Add(chart1); // Add the chart to the left panel of the split container
-
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.AutoGenerateColumns = true; // make the columns eventually
+            // Setting up and displaying stock data on datagridview
+            dataGridView1.Dock = DockStyle.Fill; // TODO: CHANGE SIZE EVENTUALLY
+            dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = candlesticks;
+
+            chart1.Series.Clear();
+            chart2.Series.Clear();
+
+            Series candlestickSeries = new Series("Candlestick")
+            {
+                ChartType = SeriesChartType.Stock,
+                XValueType = ChartValueType.Date,
+            };
+
+            Series volumeSeries = new Series("Volume")
+            {
+                ChartType = SeriesChartType.Column, 
+                XValueType = ChartValueType.Date,
+            };
+
+            List<double> yValues = new List<double>();
+            List<double> volumeValues = new List<double>();
+
+            foreach (var cs in candlesticks)
+            {
+                DataPoint dataPoint = new DataPoint
+                {
+                    XValue = DateTime.Parse(cs.date).ToOADate(),
+                    YValues = new double[] { (double)cs.open, (double)cs.high, (double)cs.low, (double)cs.close }
+                };
+
+                // Change candlestick based on the open and close values
+                if (cs.open < cs.close)
+                {
+                    dataPoint.Color = Color.Green;
+                }
+                else
+                {
+                    dataPoint.Color = Color.Red;
+                }
+
+                candlestickSeries.Points.Add(dataPoint);
+                volumeValues.Add((double)cs.volume);
+
+                yValues.Add((double)cs.open);
+                yValues.Add((double)cs.high);
+                yValues.Add((double)cs.low);
+                yValues.Add((double)cs.close);
+            }
+
+            for (int i = 0; i < candlesticks.Count; i++)
+            {
+                DataPoint dataPoint = new DataPoint
+                {
+                    XValue = DateTime.Parse(candlesticks[i].date).ToOADate(),
+                    YValues = new double[] { (double)candlesticks[i].volume }
+                };
+                volumeSeries.Points.Add(dataPoint);
+            }
+
+            chart1.Series.Add(candlestickSeries);
+            chart2.Series.Add(volumeSeries);
+
+            chart1.ChartAreas[0].AxisY.Minimum = yValues.Min();
+            chart1.ChartAreas[0].AxisY.Maximum = yValues.Max();
+            chart2.ChartAreas[0].AxisY.Minimum = volumeValues.Min();
+            chart2.ChartAreas[0].AxisY.Maximum = volumeValues.Max();
+
+            // Setting up the title and labels
+            string tickerName = comboBox1.SelectedItem.ToString() + "-" + timePeriod;
+            chart1.Titles.Clear();
+            chart1.Titles.Add(new Title(tickerName));
+            chart2.Titles.Clear();
+            chart2.Titles.Add(new Title(tickerName + " - Volume Chart"));
+            chart1.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
+            chart2.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
+
         }
 
         private void button3_Click(object sender, EventArgs e)
