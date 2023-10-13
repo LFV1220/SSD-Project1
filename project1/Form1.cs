@@ -8,6 +8,7 @@ namespace project1
     {
         private string timePeriod = "Day";
         DataGridView dataGridView1 = new DataGridView();
+        string file;
 
         public Form1()
         {
@@ -49,6 +50,11 @@ namespace project1
             radioButton3.Visible = status;
             button1.Visible = status;
             button2.Visible = status;
+            label1_ticker.Visible = status;
+            label2_fromDate.Visible = status;
+            label3_toDate.Visible = status;
+            dateTimePicker1_fromDate.Visible = status;
+            dateTimePicker2_toDate.Visible = status;
         }
 
         // Function to change to the second layout/starting page
@@ -60,7 +66,7 @@ namespace project1
             chart2.Visible = status;
         }
 
-        // Change this part into setters/getters
+        // Function to set the time period
         private void radioButton_CheckedChanged_setPeriod(object sender, EventArgs e)
         {
             if (radioButton1.Checked)
@@ -98,6 +104,15 @@ namespace project1
             {
                 // Error, no ticker selected
                 MessageBox.Show("Please select a ticker symbol.", "No Ticker Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Make sure there is a valid date range
+            if (dateTimePicker2_toDate.Value < dateTimePicker1_fromDate.Value)
+            {
+                // Error, invalid date range
+                MessageBox.Show("Please make sure the \"from\" date is before the \"to\" date.", "Invalid Date Range", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             // Look for file matching ticker symbol and date period and open it
@@ -119,27 +134,43 @@ namespace project1
             firstLayout(false);
             secondLayout(true);
 
-
+            // Show the stock data
             displayData(candlesticks);
-
 
             // Add the DataGridView to the form
             this.Controls.Add(dataGridView1);
-
         }
 
         // Function to use and open a CSV file for stock data
         private void openFile(object sender, EventArgs e)
         {
             // OpenFileDialog
+            DialogResult result = openFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                string filePath = openFileDialog1.FileName;
+                file = filePath;
+                BindingList<candlestick> candlesticks = readData(filePath);
 
-            // Make form items invisible
-            // Use Chart control and DataGridView (or something like that) to display stock information
+                // Change layouts
+                firstLayout(false);
+                secondLayout(true);
 
-            // Also add a reset button to go back once there is stock data
+                // Show the stock data
+                displayData(candlesticks);
+
+                // Add the DataGridView to the form
+                this.Controls.Add(dataGridView1);
+            }
+            else
+            {
+                // Error opening selected file
+                MessageBox.Show("Unable to open selected file. Please try again.", "Unable to open selected file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
         }
 
-        // Function to read data from file
+        // Function to read data from .csv file
         private BindingList<candlestick> readData(string filePath)
         {
             BindingList<candlestick> candlesticks = new BindingList<candlestick>();
@@ -154,18 +185,23 @@ namespace project1
                     if (line != referenceString)
                     {
                         candlestick cs = new candlestick(line);
-                        string date = cs.date;
-                        candlesticks.Add(cs);
+                        DateTime csDate = DateTime.Parse(cs.date);
+
+                        if (csDate >= dateTimePicker1_fromDate.Value && csDate <= dateTimePicker2_toDate.Value)
+                        {
+                            candlesticks.Add(cs);
+                        }
                     }
                 }
             }
             return candlesticks;
         }
 
+        // Function to create the charts (with info) and display the data using the charts and datagridview
         private void displayData(BindingList<candlestick> candlesticks)
         {
             // Setting up and displaying stock data on datagridview
-            dataGridView1.Dock = DockStyle.Fill; // TODO: CHANGE SIZE EVENTUALLY
+            dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = candlesticks;
 
@@ -180,7 +216,7 @@ namespace project1
 
             Series volumeSeries = new Series("Volume")
             {
-                ChartType = SeriesChartType.Column, 
+                ChartType = SeriesChartType.Column,
                 XValueType = ChartValueType.Date,
             };
 
@@ -199,6 +235,7 @@ namespace project1
                 if (cs.open < cs.close)
                 {
                     dataPoint.Color = Color.Green;
+
                 }
                 else
                 {
@@ -229,11 +266,16 @@ namespace project1
 
             chart1.ChartAreas[0].AxisY.Minimum = yValues.Min();
             chart1.ChartAreas[0].AxisY.Maximum = yValues.Max();
+            chart1.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
             chart2.ChartAreas[0].AxisY.Minimum = volumeValues.Min();
             chart2.ChartAreas[0].AxisY.Maximum = volumeValues.Max();
+            chart2.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
 
             // Setting up the title and labels
-            string tickerName = comboBox1.SelectedItem.ToString() + "-" + timePeriod;
+            string tickerName;
+            if (comboBox1.SelectedIndex != -1) tickerName = comboBox1.SelectedItem.ToString() + "-" + timePeriod;
+            else tickerName = Path.GetFileNameWithoutExtension(file);
+
             chart1.Titles.Clear();
             chart1.Titles.Add(new Title(tickerName));
             chart2.Titles.Clear();
@@ -243,10 +285,12 @@ namespace project1
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        // Function to go back to the first page/layout when the reset button is clicked
+        private void button3_Click_reset(object sender, EventArgs e)
         {
             secondLayout(false);
             firstLayout(true);
         }
+
     }
 }

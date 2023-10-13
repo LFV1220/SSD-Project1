@@ -17,6 +17,7 @@ namespace project1
         public long volume { get; set; }
         public string date { get; set; }
 
+        // Given a row of data, this function creates an object of type candlestick 
         public candlestick(String rowOfData) 
         {
             char[] separators = new char[] { ',', ' ', '"', '-' };

@@ -48,6 +48,12 @@
             form1BindingSource2 = new BindingSource(components);
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            dateTimePicker1_fromDate = new DateTimePicker();
+            dateTimePicker2_toDate = new DateTimePicker();
+            label1_ticker = new Label();
+            label2_fromDate = new Label();
+            label3_toDate = new Label();
+            openFileDialog1 = new OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource2).BeginInit();
@@ -100,7 +106,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(551, 309);
+            button1.Location = new Point(558, 396);
             button1.Name = "button1";
             button1.Size = new Size(134, 63);
             button1.TabIndex = 4;
@@ -110,7 +116,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(563, 421);
+            button2.Location = new Point(570, 508);
             button2.Name = "button2";
             button2.Size = new Size(110, 37);
             button2.TabIndex = 5;
@@ -132,7 +138,7 @@
             button3.Text = "Reset";
             button3.UseVisualStyleBackColor = true;
             button3.Visible = false;
-            button3.Click += button3_Click;
+            button3.Click += button3_Click_reset;
             // 
             // chart1
             // 
@@ -170,11 +176,62 @@
             chart2.Text = "chart2";
             chart2.Visible = false;
             // 
+            // dateTimePicker1_fromDate
+            // 
+            dateTimePicker1_fromDate.Location = new Point(396, 286);
+            dateTimePicker1_fromDate.MaxDate = new DateTime(2024, 12, 31, 0, 0, 0, 0);
+            dateTimePicker1_fromDate.MinDate = new DateTime(2000, 1, 1, 0, 0, 0, 0);
+            dateTimePicker1_fromDate.Name = "dateTimePicker1_fromDate";
+            dateTimePicker1_fromDate.Size = new Size(200, 23);
+            dateTimePicker1_fromDate.TabIndex = 9;
+            dateTimePicker1_fromDate.Value = new DateTime(2000, 1, 1, 0, 0, 0, 0);
+            // 
+            // dateTimePicker2_toDate
+            // 
+            dateTimePicker2_toDate.Location = new Point(657, 286);
+            dateTimePicker2_toDate.MaxDate = new DateTime(2024, 12, 31, 0, 0, 0, 0);
+            dateTimePicker2_toDate.MinDate = new DateTime(2000, 1, 1, 0, 0, 0, 0);
+            dateTimePicker2_toDate.Name = "dateTimePicker2_toDate";
+            dateTimePicker2_toDate.Size = new Size(200, 23);
+            dateTimePicker2_toDate.TabIndex = 10;
+            // 
+            // label1_ticker
+            // 
+            label1_ticker.AutoSize = true;
+            label1_ticker.Location = new Point(322, 141);
+            label1_ticker.Name = "label1_ticker";
+            label1_ticker.Size = new Size(44, 15);
+            label1_ticker.TabIndex = 11;
+            label1_ticker.Text = "Ticker: ";
+            // 
+            // label2_fromDate
+            // 
+            label2_fromDate.AutoSize = true;
+            label2_fromDate.Location = new Point(396, 268);
+            label2_fromDate.Name = "label2_fromDate";
+            label2_fromDate.Size = new Size(41, 15);
+            label2_fromDate.TabIndex = 12;
+            label2_fromDate.Text = "From: ";
+            // 
+            // label3_toDate
+            // 
+            label3_toDate.AutoSize = true;
+            label3_toDate.Location = new Point(657, 268);
+            label3_toDate.Name = "label3_toDate";
+            label3_toDate.Size = new Size(25, 15);
+            label3_toDate.TabIndex = 13;
+            label3_toDate.Text = "To: ";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1264, 681);
+            Controls.Add(label3_toDate);
+            Controls.Add(label2_fromDate);
+            Controls.Add(label1_ticker);
+            Controls.Add(dateTimePicker2_toDate);
+            Controls.Add(dateTimePicker1_fromDate);
             Controls.Add(chart2);
             Controls.Add(chart1);
             Controls.Add(button3);
@@ -210,5 +267,11 @@
         private BindingSource form1BindingSource2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private DateTimePicker dateTimePicker1_fromDate;
+        private DateTimePicker dateTimePicker2_toDate;
+        private Label label1_ticker;
+        private Label label2_fromDate;
+        private Label label3_toDate;
+        private OpenFileDialog openFileDialog1;
     }
 }
