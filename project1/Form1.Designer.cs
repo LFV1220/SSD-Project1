@@ -29,25 +29,25 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            comboBox1 = new ComboBox();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            comboBox1_ticker = new ComboBox();
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             radioButton3 = new RadioButton();
-            button1 = new Button();
-            button2 = new Button();
+            button1_viewTicker = new Button();
+            button2_openFile = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            button3 = new Button();
+            button3_reset = new Button();
             form1BindingSource = new BindingSource(components);
             form1BindingSource1 = new BindingSource(components);
             form1BindingSource2 = new BindingSource(components);
-            chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            chart1_stockData = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            chart2_volume = new System.Windows.Forms.DataVisualization.Charting.Chart();
             dateTimePicker1_fromDate = new DateTimePicker();
             dateTimePicker2_toDate = new DateTimePicker();
             label1_ticker = new Label();
@@ -57,17 +57,17 @@
             ((System.ComponentModel.ISupportInitialize)form1BindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)chart2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chart1_stockData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chart2_volume).BeginInit();
             SuspendLayout();
             // 
-            // comboBox1
+            // comboBox1_ticker
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(322, 169);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(240, 23);
-            comboBox1.TabIndex = 0;
+            comboBox1_ticker.FormattingEnabled = true;
+            comboBox1_ticker.Location = new Point(322, 169);
+            comboBox1_ticker.Name = "comboBox1_ticker";
+            comboBox1_ticker.Size = new Size(240, 23);
+            comboBox1_ticker.TabIndex = 0;
             // 
             // radioButton1
             // 
@@ -104,77 +104,77 @@
             radioButton3.UseVisualStyleBackColor = true;
             radioButton3.CheckedChanged += radioButton_CheckedChanged_setPeriod;
             // 
-            // button1
+            // button1_viewTicker
             // 
-            button1.Location = new Point(558, 396);
-            button1.Name = "button1";
-            button1.Size = new Size(134, 63);
-            button1.TabIndex = 4;
-            button1.Text = "View Ticker";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1_viewTicker.Location = new Point(558, 396);
+            button1_viewTicker.Name = "button1_viewTicker";
+            button1_viewTicker.Size = new Size(134, 63);
+            button1_viewTicker.TabIndex = 4;
+            button1_viewTicker.Text = "View Ticker";
+            button1_viewTicker.UseVisualStyleBackColor = true;
+            button1_viewTicker.Click += button1_Click;
             // 
-            // button2
+            // button2_openFile
             // 
-            button2.Location = new Point(570, 508);
-            button2.Name = "button2";
-            button2.Size = new Size(110, 37);
-            button2.TabIndex = 5;
-            button2.Text = "Open File (.csv)";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += openFile;
+            button2_openFile.Location = new Point(570, 508);
+            button2_openFile.Name = "button2_openFile";
+            button2_openFile.Size = new Size(110, 37);
+            button2_openFile.TabIndex = 5;
+            button2_openFile.Text = "Open File (.csv)";
+            button2_openFile.UseVisualStyleBackColor = true;
+            button2_openFile.Click += openFile;
             // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
             // 
-            // button3
+            // button3_reset
             // 
-            button3.Location = new Point(1104, 603);
-            button3.Name = "button3";
-            button3.Size = new Size(115, 42);
-            button3.TabIndex = 6;
-            button3.Text = "Reset";
-            button3.UseVisualStyleBackColor = true;
-            button3.Visible = false;
-            button3.Click += button3_Click_reset;
+            button3_reset.Location = new Point(1104, 603);
+            button3_reset.Name = "button3_reset";
+            button3_reset.Size = new Size(115, 42);
+            button3_reset.TabIndex = 6;
+            button3_reset.Text = "Reset";
+            button3_reset.UseVisualStyleBackColor = true;
+            button3_reset.Visible = false;
+            button3_reset.Click += button3_Click_reset;
             // 
-            // chart1
+            // chart1_stockData
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
-            chart1.Location = new Point(654, 24);
-            chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.YValuesPerPoint = 4;
-            chart1.Series.Add(series1);
-            chart1.Size = new Size(582, 259);
-            chart1.TabIndex = 7;
-            chart1.Text = "chart1";
-            chart1.Visible = false;
+            chartArea3.Name = "ChartArea1";
+            chart1_stockData.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            chart1_stockData.Legends.Add(legend3);
+            chart1_stockData.Location = new Point(654, 24);
+            chart1_stockData.Name = "chart1_stockData";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            series3.YValuesPerPoint = 4;
+            chart1_stockData.Series.Add(series3);
+            chart1_stockData.Size = new Size(582, 259);
+            chart1_stockData.TabIndex = 7;
+            chart1_stockData.Text = "chart1";
+            chart1_stockData.Visible = false;
             // 
-            // chart2
+            // chart2_volume
             // 
-            chartArea2.Name = "ChartArea1";
-            chart2.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            chart2.Legends.Add(legend2);
-            chart2.Location = new Point(654, 300);
-            chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            chart2.Series.Add(series2);
-            chart2.Size = new Size(582, 267);
-            chart2.TabIndex = 8;
-            chart2.Text = "chart2";
-            chart2.Visible = false;
+            chartArea4.Name = "ChartArea1";
+            chart2_volume.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            chart2_volume.Legends.Add(legend4);
+            chart2_volume.Location = new Point(654, 300);
+            chart2_volume.Name = "chart2_volume";
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            chart2_volume.Series.Add(series4);
+            chart2_volume.Size = new Size(582, 267);
+            chart2_volume.TabIndex = 8;
+            chart2_volume.Text = "chart2";
+            chart2_volume.Visible = false;
             // 
             // dateTimePicker1_fromDate
             // 
@@ -232,41 +232,41 @@
             Controls.Add(label1_ticker);
             Controls.Add(dateTimePicker2_toDate);
             Controls.Add(dateTimePicker1_fromDate);
-            Controls.Add(chart2);
-            Controls.Add(chart1);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(chart2_volume);
+            Controls.Add(chart1_stockData);
+            Controls.Add(button3_reset);
+            Controls.Add(button2_openFile);
+            Controls.Add(button1_viewTicker);
             Controls.Add(radioButton3);
             Controls.Add(radioButton2);
             Controls.Add(radioButton1);
-            Controls.Add(comboBox1);
+            Controls.Add(comboBox1_ticker);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)form1BindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource1).EndInit();
             ((System.ComponentModel.ISupportInitialize)form1BindingSource2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)chart2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chart1_stockData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chart2_volume).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private ComboBox comboBox1;
+        private ComboBox comboBox1_ticker;
         private RadioButton radioButton1;
         private RadioButton radioButton2;
         private RadioButton radioButton3;
-        private Button button1;
-        private Button button2;
+        private Button button1_viewTicker;
+        private Button button2_openFile;
         private ContextMenuStrip contextMenuStrip1;
-        private Button button3;
+        private Button button3_reset;
         private BindingSource form1BindingSource;
         private BindingSource form1BindingSource1;
         private BindingSource form1BindingSource2;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1_stockData;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2_volume;
         private DateTimePicker dateTimePicker1_fromDate;
         private DateTimePicker dateTimePicker2_toDate;
         private Label label1_ticker;

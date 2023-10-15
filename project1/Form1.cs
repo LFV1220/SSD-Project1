@@ -37,19 +37,19 @@ namespace project1
                 }
             }
 
-            comboBox1.Items.Clear();
-            comboBox1.Items.AddRange(uniqueTickers.ToArray());
+            comboBox1_ticker.Items.Clear();
+            comboBox1_ticker.Items.AddRange(uniqueTickers.ToArray());
         }
 
         // Function to change to the first layout/starting page 
         private void firstLayout(bool status)
         {
-            comboBox1.Visible = status;
+            comboBox1_ticker.Visible = status;
             radioButton1.Visible = status;
             radioButton2.Visible = status;
             radioButton3.Visible = status;
-            button1.Visible = status;
-            button2.Visible = status;
+            button1_viewTicker.Visible = status;
+            button2_openFile.Visible = status;
             label1_ticker.Visible = status;
             label2_fromDate.Visible = status;
             label3_toDate.Visible = status;
@@ -60,10 +60,10 @@ namespace project1
         // Function to change to the second layout/starting page
         private void secondLayout(bool status)
         {
-            button3.Visible = status;
+            button3_reset.Visible = status;
             dataGridView1.Visible = status;
-            chart1.Visible = status;
-            chart2.Visible = status;
+            chart1_stockData.Visible = status;
+            chart2_volume.Visible = status;
         }
 
         // Function to set the time period
@@ -100,7 +100,7 @@ namespace project1
         private void button1_Click(object sender, EventArgs e)
         {
             // Check if a ticker is selected
-            if (comboBox1.SelectedIndex == -1)
+            if (comboBox1_ticker.SelectedIndex == -1)
             {
                 // Error, no ticker selected
                 MessageBox.Show("Please select a ticker symbol.", "No Ticker Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -116,7 +116,7 @@ namespace project1
             }
 
             // Look for file matching ticker symbol and date period and open it
-            string fileName = comboBox1.SelectedItem.ToString() + "-" + timePeriod + ".csv";
+            string fileName = comboBox1_ticker.SelectedItem.ToString() + "-" + timePeriod + ".csv";
             string stockDataPath = getFolderPath();
             string filePath = Path.Combine(stockDataPath, fileName);
 
@@ -184,9 +184,11 @@ namespace project1
 
                     if (line != referenceString)
                     {
+                        // Pass the data to create a candlestick object
                         candlestick cs = new candlestick(line);
                         DateTime csDate = DateTime.Parse(cs.date);
 
+                        // Check if the date is in the range
                         if (csDate >= dateTimePicker1_fromDate.Value && csDate <= dateTimePicker2_toDate.Value)
                         {
                             candlesticks.Add(cs);
@@ -197,20 +199,20 @@ namespace project1
             return candlesticks;
         }
 
-        // Function to create the charts (with info) and display the data using the charts and datagridview
+        // Function to display the stock data as a datagridview, stock price chart, and volume chart
         private void displayData(BindingList<candlestick> candlesticks)
         {
-            // Setting up and displaying stock data on datagridview
+            // Setting up and displaying stock data on DataGridView
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.DataSource = candlesticks;
 
-            chart1.Series.Clear();
-            chart2.Series.Clear();
+            chart1_stockData.Series.Clear();
+            chart2_volume.Series.Clear();
 
             Series candlestickSeries = new Series("Candlestick")
             {
-                ChartType = SeriesChartType.Stock,
+                ChartType = SeriesChartType.Candlestick, // Use Candlestick chart type
                 XValueType = ChartValueType.Date,
             };
 
@@ -231,11 +233,14 @@ namespace project1
                     YValues = new double[] { (double)cs.open, (double)cs.high, (double)cs.low, (double)cs.close }
                 };
 
-                // Change candlestick based on the open and close values
+                // Candlestick size based on price difference
+                double priceDifference = Math.Abs((double)cs.close - (double)cs.open);
+                dataPoint.SetCustomProperty("PriceDifference", priceDifference.ToString());
+
+                // Set the color based on open and close values
                 if (cs.open < cs.close)
                 {
                     dataPoint.Color = Color.Green;
-
                 }
                 else
                 {
@@ -251,6 +256,7 @@ namespace project1
                 yValues.Add((double)cs.close);
             }
 
+            // For the volume chart
             for (int i = 0; i < candlesticks.Count; i++)
             {
                 DataPoint dataPoint = new DataPoint
@@ -261,29 +267,29 @@ namespace project1
                 volumeSeries.Points.Add(dataPoint);
             }
 
-            chart1.Series.Add(candlestickSeries);
-            chart2.Series.Add(volumeSeries);
+            chart1_stockData.Series.Add(candlestickSeries);
+            chart2_volume.Series.Add(volumeSeries);
 
-            chart1.ChartAreas[0].AxisY.Minimum = yValues.Min();
-            chart1.ChartAreas[0].AxisY.Maximum = yValues.Max();
-            chart1.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
-            chart2.ChartAreas[0].AxisY.Minimum = volumeValues.Min();
-            chart2.ChartAreas[0].AxisY.Maximum = volumeValues.Max();
-            chart2.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
+            chart1_stockData.ChartAreas[0].AxisY.Minimum = yValues.Min();
+            chart1_stockData.ChartAreas[0].AxisY.Maximum = yValues.Max();
+            chart1_stockData.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
+            chart2_volume.ChartAreas[0].AxisY.Minimum = volumeValues.Min();
+            chart2_volume.ChartAreas[0].AxisY.Maximum = volumeValues.Max();
+            chart2_volume.ChartAreas[0].AxisY.LabelStyle.Format = "F0";
 
             // Setting up the title and labels
-            string tickerName;
-            if (comboBox1.SelectedIndex != -1) tickerName = comboBox1.SelectedItem.ToString() + "-" + timePeriod;
-            else tickerName = Path.GetFileNameWithoutExtension(file);
+            string tickerName = comboBox1_ticker.SelectedIndex != -1
+                ? comboBox1_ticker.SelectedItem.ToString() + "-" + timePeriod
+                : Path.GetFileNameWithoutExtension(file);
 
-            chart1.Titles.Clear();
-            chart1.Titles.Add(new Title(tickerName));
-            chart2.Titles.Clear();
-            chart2.Titles.Add(new Title(tickerName + " - Volume Chart"));
-            chart1.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
-            chart2.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
-
+            chart1_stockData.Titles.Clear();
+            chart1_stockData.Titles.Add(new Title(tickerName));
+            chart2_volume.Titles.Clear();
+            chart2_volume.Titles.Add(new Title(tickerName + " - Volume Chart"));
+            chart1_stockData.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
+            chart2_volume.ChartAreas[0].AxisX.LabelStyle.Format = "MM/dd/yyyy";
         }
+
 
         // Function to go back to the first page/layout when the reset button is clicked
         private void button3_Click_reset(object sender, EventArgs e)
