@@ -196,7 +196,13 @@ namespace project1
                     }
                 }
             }
-            return candlesticks;
+
+            // To get the candlesticks in ascending order
+            List<candlestick> reversedList = candlesticks.ToList();
+            reversedList.Reverse();
+            BindingList<candlestick> ascCandlesticks = new BindingList<candlestick>(reversedList);
+
+            return ascCandlesticks;
         }
 
         // Function to display the stock data as a datagridview, stock price chart, and volume chart

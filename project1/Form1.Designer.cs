@@ -222,6 +222,10 @@
             label3_toDate.TabIndex = 13;
             label3_toDate.Text = "To: ";
             // 
+            // openFileDialog1
+            // 
+            openFileDialog1.Filter = "All Stock Files|*.csv|Daily Stocks|*-Day.csv|Weekly Stocks|*-Week.csv|Monthly Stocks|*-Month.csv";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
